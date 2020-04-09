@@ -1,2 +1,0 @@
-# ReactWallpapers
-Created with CodeSandbox
