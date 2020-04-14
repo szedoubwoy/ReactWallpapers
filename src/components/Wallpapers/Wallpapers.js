@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 
 import Button from "../Button/Button";
 import Wallpaper from "./Wallpaper/Wallpaper";
@@ -10,42 +11,58 @@ import { fetchArchitecture } from "../../actions/fetch_architecture";
 
 class Wallpapers extends React.Component {
   state = {
-    wallpaperList: []
+    wallpaperList: [],
+    favourites: []
   };
 
-  setCurrentList = () => {
-    this.setState({
-      wallpaperList: this.props.natureWallpapers
+  setCurrentList = (category, data) => {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        wallpaperList: data
+      };
+    });
+  };
+
+  setListHandler = data => {
+    this.setState(prevState => {
+      return {
+        ...prevState,
+        wallpaperList: data
+      };
     });
   };
 
   getSpiritualityWallpapers = e => {
     e.preventDefault();
 
-    this.props.fetchSpirituality();
+    this.props.fetchSpirituality(this.setListHandler);
   };
 
   getNatureWallpapers = e => {
     e.preventDefault();
 
-    this.props.fetchNature();
+    this.props.fetchNature(this.setListHandler);
   };
 
   getArchitectureWallpapers = e => {
     e.preventDefault();
 
-    this.props.fetchArchitecture();
+    this.props.fetchArchitecture(this.setListHandler);
   };
 
-  componentDidMount() {}
+  handleFavourite = e => {
+    this.setState({
+      favourite: e.target.value
+    });
+  };
 
   componentDidUpdate() {
-    console.log(this.props.natureWallpapers);
-    //ZMIENNA MA WSZYTKIE DANE  Z FETCHA
+    console.log(localStorage.getItem("favourites"));
   }
 
   render() {
-    const { natureWallpapers } = this.props;
+    const { wallpaperList } = this.state;
 
     return (
       <>
@@ -67,12 +84,16 @@ class Wallpapers extends React.Component {
           </div>
 
           <div className="row my-5">
-            {natureWallpapers.length ? (
-              natureWallpapers.map(wallpaper => (
-                <Wallpaper key={wallpaper.id} {...wallpaper} />
+            {wallpaperList.length ? (
+              wallpaperList.map(wallpaper => (
+                <Wallpaper
+                  key={wallpaper.id}
+                  saveWallpaper={() => this.saveHandler("razraz", "dwa")}
+                  {...wallpaper}
+                />
               ))
             ) : (
-              <h5>List is empty...</h5>
+              <h5 className="col-12 text-center">Choose category</h5>
             )}
           </div>
         </div>
@@ -89,11 +110,12 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = {
-  fetchNature,
-  fetchSpirituality,
-  fetchArchitecture
-};
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(
+    { fetchNature, fetchSpirituality, fetchArchitecture },
+    dispatch
+  );
+}
 
 export default connect(
   mapStateToProps,

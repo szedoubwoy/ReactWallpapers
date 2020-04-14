@@ -1,14 +1,14 @@
-export function fetchSpirituality() {
+import axios from "axios";
+
+export function fetchSpirituality(func) {
   return function(dispatch) {
-    fetch(
-      `https://api.unsplash.com/photos/?client_id=eswXx3ZP77UKNX2fArkl4AuY-GmFAR_R-3mwqM9cAIs`
-    )
+    axios
+      .get(
+        `https://api.unsplash.com/search/photos/?page=1&query=spirituality&client_id=eswXx3ZP77UKNX2fArkl4AuY-GmFAR_R-3mwqM9cAIs`
+      )
       .then(res => {
-        return res.json();
-      })
-      .then(res => {
-        dispatch({ type: "FETCH_SPIRITUALITY", payload: res });
-        console.log("SPIRITUALITY");
+        dispatch({ type: "FETCH_SPIRITUALITY", payload: res.data.results });
+        func(res.data.results);
       })
       .catch(err => {
         console.log(err);

@@ -1,16 +1,15 @@
-export function fetchArchitecture(callback) {
+import axios from "axios";
+
+export function fetchArchitecture(func) {
   return function(dispatch) {
-    fetch(
-      `https://api.unsplash.com/photos/?client_id=eswXx3ZP77UKNX2fArkl4AuY-GmFAR_R-3mwqM9cAIs&page=1`
-    )
+    axios
+      .get(
+        `https://api.unsplash.com/search/photos/?page=1&query=architecture&client_id=eswXx3ZP77UKNX2fArkl4AuY-GmFAR_R-3mwqM9cAIs`
+      )
       .then(res => {
-        return res.json();
+        dispatch({ type: "FETCH_ARCHITECTURE", payload: res.data.results });
+        func(res.data.results);
       })
-      .then(res => {
-        dispatch({ type: "FETCH_ARCHITECTURE", payload: res });
-        console.log("ARCHITECTURE");
-      })
-      .then(callback())
       .catch(err => {
         console.log(err);
       });

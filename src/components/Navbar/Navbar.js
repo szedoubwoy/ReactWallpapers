@@ -29,7 +29,7 @@ const Navbar = () => (
           </NavLink>
         </li>
         <li className="nav-item ml-5">
-          <NavLink exact to="/add" className="nav-link">
+          <NavLink exact to="/favourite" className="nav-link">
             Favourite Wallpapers
           </NavLink>
         </li>
